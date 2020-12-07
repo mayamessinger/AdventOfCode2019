@@ -16,6 +16,11 @@ def calcSpacecraftFuel(moduleMasses):
 def calcModuleFuel(massString):
 	mass = int(massString)
 
-	return mass//3 - 2
+	fuelReq = mass//3 - 2;
+
+	if (fuelReq <= 0):
+		return 0;
+
+	return fuelReq + calcModuleFuel(fuelReq)
 
 run("day1_input.txt")
