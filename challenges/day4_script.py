@@ -41,10 +41,12 @@ def always_increases(string):
 	return True
 
 def adjacent_same(string):
-	for i in range(1, 6):
-		if (string[i] == string[i-1]):
-			return True
+	nums = dict()
 
-	return False
+	for i in range(0, 6):
+		i_char = string[i]
+		nums[i_char] = nums[i_char] + 1 if i_char in nums else 1
+
+	return 2 in nums.values()
 
 run("../inputs/day4_input.txt")
