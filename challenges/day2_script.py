@@ -53,4 +53,4 @@ def getLastCommandIndex(intcode, commandSpacing):
 		if (intcode[i] == 99):
 			return i
 
-run("day2_input.txt")
+run("../inputs/day2_input.txt")

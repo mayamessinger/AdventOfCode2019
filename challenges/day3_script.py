@@ -121,4 +121,4 @@ def getClosestIntersection(intersections):
 	return min(intersections, key=lambda inter: inter.steps)
 
 
-run("day3_input.txt")
+run("../inputs/day3_input.txt")

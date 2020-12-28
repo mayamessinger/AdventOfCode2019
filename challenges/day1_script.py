@@ -23,4 +23,4 @@ def calcModuleFuel(massString):
 
 	return fuelReq + calcModuleFuel(fuelReq)
 
-run("day1_input.txt")
+run("../inputs/day1_input.txt")
