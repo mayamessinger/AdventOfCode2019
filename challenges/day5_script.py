@@ -22,7 +22,7 @@ def run(input_file):
 	contents.close()
 
 	intcode = [int(i) for i in intcode]
-	run_intcode(intcode, 1)
+	run_intcode(intcode, 5)
 
 def run_intcode(intcode, initial_input):
 	i = 0;
@@ -42,6 +42,28 @@ def run_intcode(intcode, initial_input):
 		elif (instruction.opcode == 4):
 			print("value at {} is {}".format(param1, intcode[param1]))
 			i += 2
+		elif (instruction.opcode == 5):
+			if (param1 != 0):
+				i = param2
+			else:
+				i += 3
+		elif (instruction.opcode == 6):
+			if (param1 == 0):
+				i = param2
+			else:
+				i += 3
+		elif (instruction.opcode == 7):
+			if (param1 < param2):
+				intcode[param3] = 1
+			else:
+				intcode[param3] = 0
+			i += 4
+		elif (instruction.opcode == 8):
+			if (param1 == param2):
+				intcode[param3] = 1
+			else:
+				intcode[param3] = 0
+			i += 4
 		elif (instruction.opcode == 99):
 			return intcode
 		else:
@@ -64,10 +86,9 @@ def getParameters(intcode, instruction, index):
 	param1 = None
 
 	if (instruction.opcode == 99):
-		return (param3, param2, param1)
+		pass
 	elif (instruction.opcode == 3 or instruction.opcode == 4):
 		param1 = intcode[index + 1]
-		return (param3, param2, param1)
 	else:
 		if (index < len(intcode) - 3):
 			param3 = intcode[index + 3]
@@ -82,6 +103,6 @@ def getParameters(intcode, instruction, index):
 				if (instruction.param1_mode == ParameterMode.Position.value) \
 				else intcode[index + 1]
 
-		return (param3, param2, param1)
+	return (param3, param2, param1)
 
 run("../inputs/day5_input.txt")
