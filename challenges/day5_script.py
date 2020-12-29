@@ -88,7 +88,9 @@ def getParameters(intcode, instruction, index):
 	if (instruction.opcode == 99):
 		pass
 	elif (instruction.opcode == 3 or instruction.opcode == 4):
-		param1 = intcode[index + 1]
+		param1 = intcode[index + 1] \
+			if (instruction.param1_mode == ParameterMode.Position.value) \
+			else index + 1
 	else:
 		if (index < len(intcode) - 3):
 			param3 = intcode[index + 3]
