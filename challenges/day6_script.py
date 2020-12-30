@@ -1,16 +1,21 @@
 from enum import Enum
 import re
 
+class Node:
+	def __init__(self, name, parent):
+		self.name = name
+		self.parent = parent
+
 def run(input_file):
 	contents = open(input_file, "r")
 	orbit_strings = contents.read().split("\n")
 	contents.close()
 
 	orbits = parse_orbits(orbit_strings)
-	all_orbits = get_all_orbits(orbits)
-	orbit_count = get_orbit_count(all_orbits)
+	end_node = breadth_first_search(orbits, "YOU", "SAN")
+	num_switches = get_num_switches(end_node, "YOU", "SAN")
 
-	print(orbit_count)
+	print(num_switches)
 
 def parse_orbits(orbit_strings):
 	orbits = dict()
@@ -22,37 +27,44 @@ def parse_orbits(orbit_strings):
 
 		if base not in orbits:
 			orbits[base] = {orbiter}
-
-		if base in orbits:
+		elif base in orbits:
 			orbits[base].add(orbiter)
+
+		if orbiter not in orbits:
+			orbits[orbiter] = {base}
+		elif orbiter in orbits:
+			orbits[orbiter].add(base)
 
 	return orbits
 
-def get_all_orbits(orbits):
-	all_orbits = dict()
+def breadth_first_search(orbits, start, end):
+	start_node = Node(start, None)
 
-	for key in orbits:
-		all_orbits[key] = set()
-		add_indirect_orbits(all_orbits[key], key, orbits)
+	discovered = set([start_node])
+	to_visit = [start_node]
 
-	return all_orbits
+	while len(to_visit) != 0:
+		curr_obj = to_visit.pop()
 
-def add_indirect_orbits(parent_orbits, obj, orbits):
-	if obj not in orbits.keys():
-		return
+		if curr_obj.name == end:
+			return curr_obj
 
-	for val in orbits[obj]:
-		parent_orbits.add(val)
+		for adjacent_obj in orbits[curr_obj.name]:
+			if adjacent_obj not in map(lambda d: d.name, discovered):
+				adjacent_node = Node(adjacent_obj, curr_obj)
 
-		if val in orbits.keys():
-			add_indirect_orbits(parent_orbits, val, orbits)
+				discovered.add(adjacent_node)
+				to_visit.append(adjacent_node)
 
-def get_orbit_count(orbits):
-	total_orbits = 0
+def get_num_switches(node, start, end):
+	num_mintermediate = 0
 
-	for key in orbits:
-		total_orbits += len(orbits[key])
+	curr_node = node
+	while curr_node.parent:
+		if (curr_node.name not in [start, end]):
+			num_mintermediate += 1
+		curr_node = curr_node.parent
 
-	return total_orbits
+	return num_mintermediate - 1 # 1 less switch than objects
 
 run("../inputs/day6_input.txt")
